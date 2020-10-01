@@ -143,9 +143,9 @@ int main() {
 
 	static const float interleaved[] = {
 		// X	 Y	   Z	  R	   G	B
-		1.0f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f,
-		 1.5f, 1.0f, 0.0f, 0.0f, 0.7f, 0.5f,
-		  0.5f, 1.5f, 0.0f, 0.0f, 1.0f, 1.0f,
+		 0.7f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f,
+		 0.7f, 0.5, 0.0f, 0.0f, 0.7f, 0.5f,
+		-0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f,
 	};
 	VertexBuffer* interleaved_vbo = new VertexBuffer();
 	interleaved_vbo->LoadData(interleaved, 6 * 3);
@@ -168,10 +168,23 @@ int main() {
 
 	/*if (!loadShaders())
 		return 1;*/
+	//Default Shader
 	Shader* shader = new Shader();
 	shader->LoadShaderPartFromFile("shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
 	shader->LoadShaderPartFromFile("shaders/frag_shader.glsl", GL_FRAGMENT_SHADER);
 	shader->Link();
+
+	//Custom Shader 1
+	Shader* shader2 = new Shader();
+	shader2->LoadShaderPartFromFile("shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
+	shader2->LoadShaderPartFromFile("shaders/frag_shader2.glsl", GL_FRAGMENT_SHADER);
+	shader2->Link();
+
+	//Custom Shader 2
+	Shader* shader3 = new Shader();
+	shader3->LoadShaderPartFromFile("shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
+	shader3->LoadShaderPartFromFile("shaders/frag_shader3.glsl", GL_FRAGMENT_SHADER);
+	shader3->Link();
 
 	// GL states
 	glEnable(GL_DEPTH_TEST);
@@ -192,11 +205,13 @@ int main() {
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shader->Bind();
+		shader3->Bind();
 
 		vao->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		shader2->Bind();
+		
 		vao2->Bind();
 		glDrawElements(GL_TRIANGLES, interleaved_ibo->GetElementCount(), interleaved_ibo->GetElementType(), nullptr);
 		vao->UnBind();
